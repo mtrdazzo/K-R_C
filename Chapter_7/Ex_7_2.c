@@ -28,9 +28,12 @@
 
 uint32_t getLine(char *, uint32_t);
 uint32_t printLine(char *, uint32_t, char);
+void usage(void);
 
 int main(int argc, char **argv)
 {
+    usage();
+    return 0;
     char buffer[MAXLEN];
     uint32_t len;
     char format;
@@ -57,6 +60,21 @@ int main(int argc, char **argv)
     return 0;
 }
 
+/* usage: print command line options, and usage instructions */
+void usage(void)
+{
+    printf("\n");
+    printf("usage: Ex_7_2 options\n");
+    printf("Process arbitrary user input.\n");
+    printf("\noptional arguments:\n");
+    printf(" -f, --file   [FILE]        Get input from file\n");
+    printf(" -t, --output [OUTPUT FILE] Send output to file\n");
+    printf(" -x, --hex                  Convert non-graphic characters to hexadecimal\n");
+    printf(" -o, --octal                Convert non-graphic characters to octal\n");
+    printf(" -h, --help                 Show this help message and exit\n");
+    printf("\n");
+}
+
 /* getLine: get single line from input */
 uint32_t getLine(char *buffer, uint32_t len)
 {
@@ -67,6 +85,7 @@ uint32_t getLine(char *buffer, uint32_t len)
         --len;
     }
     *buffer = '\0';
+    
     return MAXLEN - len;
 }
 
