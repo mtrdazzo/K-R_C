@@ -9,8 +9,79 @@
  */
 
 #include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+
+#define MAXLEN 1000
+#define LETTER_a        0x61
+#define LETTER_z        0x7A
+#define LETTER_A        0x41
+#define LETTER_Z        0x5A
+#define NUM_0           0x30
+#define NUM_9           0X39
+
+#define IS_LOWERCASE(A) (A) >= LETTER_a && (A) <= LETTER_z
+#define IS_UPPERCASE(A) (A) >= LETTER_A && (A) <= LETTER_Z
+#define IS_NUM(A)       (A) >= NUM_0 && (A) <= NUM_9
+#define IS_ALPHA(A)     (IS_LOWERCASE(A)) || (IS_UPPERCASE(A))
+#define IS_ALPHA_NUM(A) (IS_ALPHA(A)) || (IS_NUM(A))
+
+uint32_t getLine(char *, uint32_t);
+uint32_t printLine(char *, uint32_t, char);
 
 int main(int argc, char **argv)
 {
+    char buffer[MAXLEN];
+    uint32_t len;
+    char format;
+
+    if (argc > 1)
+    {
+        if (!strcmp(*(argv+1), "-o"))
+            format = 'o';
+        else if (!strcmp(*(argv+1), "-x"))
+            format = 'x';
+        else if (!strcmp(*(argv+1), "-c"))
+            format = 'c';
+        else
+        {
+            printf("Incorrect format argument: %s\n", *(argv+1));
+            return -1;
+        }
+    }
+    else
+        format = 'c';
+
+    while ((len = getLine(buffer, MAXLEN)))
+        printLine(buffer, len, format);
+    return 0;
+}
+
+/* getLine: get single line from input */
+uint32_t getLine(char *buffer, uint32_t len)
+{
+    uint8_t c;
+
+    while ((len-1) && (c = getchar()) != EOF && c != '\n') {
+        *buffer++ = c;
+        --len;
+    }
+    *buffer = '\0';
+    return MAXLEN - len;
+}
+
+/* printLine: print single line from input */
+uint32_t printLine(char *line, uint32_t len, char format)
+{
+    while (len) {
+        if (IS_ALPHA_NUM(*line))
+            printf("%c", *line);
+        else
+            printf("0x%x", *line);
+        ++line;
+        --len;
+    }
+    printf("\n");
+
     return 0;
 }
